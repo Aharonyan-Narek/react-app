@@ -1,20 +1,20 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
-import AppHeader from '../app-header';
-import SearchPanel from '../search-panel';
-import TodoList from '../todo-list';
-import ItemStatusFilter from '../item-status-filter';
-import ItemAddForm from '../item-add-form';
+import AppHeader from "../app-header";
+import SearchPanel from "../search-panel";
+import TodoList from "../todo-list";
+import ItemStatusFilter from "../item-status-filter";
+import ItemAddForm from "../item-add-form";
 
-import './app.css';
+import "./app.css";
 
 export default class App extends Component {
   maxId = 100;
   state = {
     todoData: [
-      this.createTodoItem('Drink Coffee'),
-      this.createTodoItem('Make Awesome App'),
-      this.createTodoItem('Have a lunch'),
+      this.createTodoItem("Drink Coffee"),
+      this.createTodoItem("Make Awesome App"),
+      this.createTodoItem("Have a lunch")
     ]
   };
 
@@ -25,82 +25,55 @@ export default class App extends Component {
       done: false,
       id: this.maxId++
     };
-  };
+  }
 
-  deleteItem = (id) => {
+  deleteItem = id => {
     this.setState(({ todoData }) => {
-      const idx = todoData.findIndex((el) => el.id === id);
+      const idx = todoData.findIndex(el => el.id === id);
 
-      const newArray = [
-        ...todoData.slice(0, idx),
-        ...todoData.slice(idx + 1)
-      ];
+      const newArray = [...todoData.slice(0, idx), ...todoData.slice(idx + 1)];
       return {
         todoData: newArray
       };
     });
   };
-  AddItem = (text) => {
+  AddItem = text => {
     const newItem = this.createTodoItem(text);
 
     this.setState(({ todoData }) => {
       const newArray = [...todoData, newItem];
       return {
         todoData: newArray
-      }
-    })
+      };
+    });
   };
 
-  toggleProperty = (arr, id, propName) => {
-    const idx = arr.findIndex((el) => el.id === id);
+  toggleProperty(arr, id, propName) {
+    const idx = arr.findIndex(el => el.id === id);
 
     const oldItem = arr[idx];
-    const newItem = {
-      ...oldItem,
-      propName: !oldItem[propName]
-    };
+    const newItem = { ...oldItem, [propName]: !oldItem[propName] };
 
-    return [
-      ...arr.slice(0, idx),
-      newItem,
-      ...arr.slice(idx + 1)
-    ];
+    return [...arr.slice(0, idx), newItem, ...arr.slice(idx + 1)];
   }
 
-  onToggleImportant = (id) => {
+  onToggleDone = id => {
     this.setState(({ todoData }) => {
       return {
-        todoData: this.toggleProperty(todoData, id, 'important')
-      }
-    })
-  };
-  onToggleDone = (id) => {
-    this.setState(({ todoData }) => {
-      return {
-        todoData: this.toggleProperty(todoData, id, 'done')
+        todoData: this.toggleProperty(todoData, id, "done")
       };
-      // const idx = todoData.findIndex((el) => el.id === id);
-
-      // const oldItem = todoData[idx];
-      // const newItem = {
-      //   ...oldItem,
-      //   done: !oldItem.done
-      // };
-
-      // const newArray = [
-      //   ...todoData.slice(0, idx),
-      //   newItem,
-      //   ...todoData.slice(idx + 1)
-      // ];
-
-      // return {
-      //   todoData: newArray
-      // };
+    });
+  };
+  onToggleImportant = id => {
+    this.setState(({ todoData }) => {
+      return {
+        todoData: this.toggleProperty(todoData, id, "important")
+      };
     });
   };
   render() {
     const { todoData } = this.state;
-    const doneCount = todoData.filter((el) => el.done).length;
+    const doneCount = todoData.filter(el => el.done).length;
     const todoCount = todoData.length - doneCount;
     return (
       <div className="todo-app">
@@ -111,7 +84,7 @@ export default class App extends Component {
         </div>
 
         <TodoList
-          todos={this.state.todoData}
+          todos={todoData}
           onDeleted={this.deleteItem}
           onToggleImportant={this.onToggleImportant}
           onToggleDone={this.onToggleDone}
@@ -119,6 +92,5 @@ export default class App extends Component {
         <ItemAddForm onItemAdded={this.AddItem} />
       </div>
     );
-  };
-};
-
+  }
+}
